@@ -1,5 +1,19 @@
 <?php
+function checkOfertas():string{
+    $msg="";
+    $nconsultas =0;
+    if (isset($_COOKIE['consultas'])){
+        $nconsultas = $_COOKIE['consultas'];
+    }
 
+    if ($nconsultas>3){
+        $msg = "OFERTAS ESPECIALES PARA NUESTROS SOCIOS";
+    }
+
+    $nconsultas++;
+    setcookie('consultas', $nconsultas);
+    return $msg;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -80,6 +94,7 @@
     
     <h2>¿A QUÉ DESTINO DESEA VIAJAR?</h2>
       <!--- MENAJE DE COOKIE ---->
+    <?= checkOfertas(); ?>
     <form action="app/buscarVuelo.php" method="GET">
         <div class="input-group">
             <label for="destino">DESTINO:</label>

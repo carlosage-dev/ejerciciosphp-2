@@ -21,7 +21,7 @@ class AccesoDatos {
         // Cambiar le password !!!!!
         try {
             $dsn = "mysql:host=localhost;dbname=Vuelos;charset=utf8";
-            $this->dbh = new PDO($dsn, "root", "root");
+            $this->dbh = new PDO($dsn, "root", "");
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e){
             echo "Error de conexión ".$e->getMessage();
@@ -36,6 +36,32 @@ class AccesoDatos {
         trigger_error('La clonación no permitida', E_USER_ERROR); 
     }
 
+    public function hayVuelos (string $destino) : bool {
+        $resu = false;
+        $stmt = $this->dbh->prepare("Select * from Vuelos where destino = :destino limit 1");
+        $stmt->bindValue(":destino", $destino);
+        $stmt->setFetchMode(PDO::FETCH_CLASS,"Vuelo");
+        if ($stmt->execute()){
+            if ($stmt->fech){
+                $resu = true;
+            }
+        }
+        return $resu;
+    }
+
+    public function getVuelos(string $destino , int $plazas):array{
+        $tablaresu=[];
+        $stmt = $this->dbh->prepare("Select * from Vuelos where destino = :destino and asientos_libres >= :plazas");
+        $stmt->bindValue(":destino", $destino);
+        $stmt->bindValue(":plazas", $plazas);
+        $stmt->setFetchMode(PDO::FETCH_CLASS,"Vuelo");
+        if ($stmt->execute()){
+            $tablaresu = $stmt->fetchAll();
+        }
+
+
+        return $tablaresu;
+    }
 
 
   

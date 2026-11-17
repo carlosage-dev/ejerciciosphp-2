@@ -5,7 +5,9 @@
  * @return string - Texto asociado al valor del número
  */
 function verClase( int $num):string {
-     return "Turista";
+    $tabla = ["1"=>"Turista", "2"=>"Bussines", "3"=>"First Class"];
+    //SE PUEDE HACER CON SWITCH
+    return $tabla[$num];
     }
 /**
  *  Muestra un mensaje según el valor de plazas, si es menor de 10  devuelve 
@@ -14,5 +16,9 @@ function verClase( int $num):string {
  * @return string
  */
 function verEstado ( int $plazas):string {
-    return "Disponible";
+    if ($plazas > 10){
+        return "Disponible";
+    }else{
+        return "ULTIMAS PLAZAS";
+    }
 }
