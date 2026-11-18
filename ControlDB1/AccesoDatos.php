@@ -52,15 +52,21 @@ class AccesoDatos {
 
     public function getPedidosCliente (int $cod_cliente){
         $tablapedido=[];
-        $stmt = $this->dbh->prepare("Select * from pedidos where cod_cliente = :cod_cliente");
+        $stmt = $this->dbh->prepare("Select cod_cliente,producto,precio from pedidos where cod_cliente = :cod_cliente");
         $stmt->bindValue(":cod_cliente", $cod_cliente);
         $stmt->setFetchMode(PDO::FETCH_CLASS,"Pedido");
         if ($stmt->execute()){
-            $tablaresu = $stmt->fetchAll();
+            $tablapedido = $stmt->fetchAll();
         }
 
 
-        return $tablaresu;
+        return $tablapedido;
+    }
+
+    public function actualizarAccesoCliente(int $cod_cliente){
+        $stmt = $this->dbh->prepare("Update clientes set veces = veces + 1 where cod_cliente = :cod_cliente");
+        $stmt->bindValue(":cod_cliente", $cod_cliente);
+        $stmt->execute();
     }
 
 

@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sin Disponibilidad - Viajes Exclusivos</title>
-    
+    <title>Error de Acceso</title>
+    <!-- Esta etiqueta hace que a los 4 segundos redirija a acceso.html -->
+    <meta http-equiv="refresh" content="4;url=acceso.html">
 </head>
 <body>
 
 <div class="container">
     
-    <div class="icon-no-results">📍 </div>
+    <div class="icon-no-results">❌</div>
     
-    <h1>Sin disponibilidad en <span class="pedido-name"></B> DESTINO_PHP</B></span></h1>
+    <h1>Error de Acceso</h1>
      
-    <p> <B> MENSAJE DE ERROR PHP </B></p>
-    <div class="button-group">
-        <a href="../index.php" class="btn btn-primary">INTENTAR OTRA DESTINO</a>
-    </div>
+    <!-- Aquí mostramos el mensaje de error que viene de controlpedidos.php -->
+    <p><b><?= $mensajeError ?></b></p>
+    
+    <p>Serás redirigido automáticamente en 4 segundos...</p>
 
+    <div class="button-group">
+        <a href="acceso.html" class="btn btn-primary">Volver al login</a>
+    </div>
     
 </div>
 
 </body>
 </html>
-
