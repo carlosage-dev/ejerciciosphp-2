@@ -39,20 +39,19 @@ class AccesoDatos {
 
     
 
-    public function getProductos (int $cod_cliente){
-        $tablapedido=[];
-        $stmt = $this->dbh->prepare("Select cod_cliente,producto,precio from pedidos where cod_cliente = :cod_cliente");
-        $stmt->bindValue(":cod_cliente", $cod_cliente);
+    public function getProductos ():array{
+        $tablaresu=[];
+        $stmt = $this->dbh->prepare("Select * from productos");
         $stmt->setFetchMode(PDO::FETCH_CLASS,"Pedido");
         if ($stmt->execute()){
-            $tablapedido = $stmt->fetchAll();
+            $tablaresu = $stmt->fetchAll();
         }
 
 
-        return $tablapedido;
+        return $tablaresu;
     }
 
-    public function actualizarAccesoCliente(int $cod_cliente){
+    public function actualizarAccesoClie(int $cod_cliente){
         $stmt = $this->dbh->prepare("Update clientes set veces = veces + 1 where cod_cliente = :cod_cliente");
         $stmt->bindValue(":cod_cliente", $cod_cliente);
         $stmt->execute();
