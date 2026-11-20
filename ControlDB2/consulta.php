@@ -1,10 +1,26 @@
 <?php
 require_once 'AccesoDatos.php';
+require_once 'Producto.php';
 // Procesar POST si hay datos
 // Chequear cookie
 // Obtener la lista de productos
 // HAY QUE USAR $_SERVER['REQUEST METHOD'] == GET, enseño solo los productos
 // Si es POST y si isset($_POST['orden']) procesamos los datos y actualizamos los precios
+$ac = AccesoDatos::initModelo();
+
+$tproductos = $ac->getProductos();
+
+if (isset($_POST['tproductos[]']) && isset($_POST['orden'])){
+    
+    if (isset($_COOKIE['precioscambiados'])){
+        $msg = "SOLO SE PUEDE HACER LA REBAJA 1 DIA";
+    }else{
+        setcookie("precioscambiados", date("d/m/Y"), time() + 3600 *24);
+        $tProductoActualizar = $_POST['tproductos[]'];
+        $num = $ac->rebajarPrecios($tProductoActualizar);
+        $msg= "PRODUCTOS ACTUALIZADOS : ". $num;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,6 +36,8 @@ require_once 'AccesoDatos.php';
             <h1>BAJAR PRECIOS PRODUCTOS SIN PEDIDOS</h1>
         </div>
         <div id="content">
+            
+            <?= $msg ?? ''; ?>
             <form name='entrada' method="post">
                 <table>
                     <tr>
@@ -43,6 +61,7 @@ require_once 'AccesoDatos.php';
 
                 <input type="submit" name="orden" value="ACTUALIZAR">
             </form>
+
         </div>
     </div>
 </body>

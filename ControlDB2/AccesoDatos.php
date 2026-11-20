@@ -21,8 +21,8 @@ class AccesoDatos {
     private function __construct(){
         // Cambiar le password !!!!!
         try {
-            $dsn = "mysql:host=localhost;dbname=etienda;charset=utf8";
-            $this->dbh = new PDO($dsn, "root", "");
+            $dsn = "mysql:host=localhost;dbname=almacendb;charset=utf8";
+            $this->dbh = new PDO($dsn, "root", "root");
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e){
             echo "Error de conexión ".$e->getMessage();
@@ -41,8 +41,8 @@ class AccesoDatos {
 
     public function getProductos ():array{
         $tablaresu=[];
-        $stmt = $this->dbh->prepare("Select * from productos");
-        $stmt->setFetchMode(PDO::FETCH_CLASS,"Pedido");
+        $stmt = $this->dbh->prepare("Select * from productos where stock_disponible >10");
+        $stmt->setFetchMode(PDO::FETCH_CLASS,"Producto");
         if ($stmt->execute()){
             $tablaresu = $stmt->fetchAll();
         }
@@ -51,10 +51,19 @@ class AccesoDatos {
         return $tablaresu;
     }
 
-    public function actualizarAccesoClie(int $cod_cliente){
-        $stmt = $this->dbh->prepare("Update clientes set veces = veces + 1 where cod_cliente = :cod_cliente");
-        $stmt->bindValue(":cod_cliente", $cod_cliente);
-        $stmt->execute();
+    public function rebajarPrecios(array $tablaProductos){
+        $cont=0;
+        $stmt = $this->dbh->prepare("update productos set precio_anual = precio_anual - precio_anual*0.10 where producto_no = :producto_no");
+        foreach ($tablaProductos as $producto_no){
+            $stmt->bindValue(":producto_no", $producto_no);
+            if ($stmt->execute()){
+                $cont++;
+            }
+        }
+        return $cont;
+                
+
+
     }
 
 
