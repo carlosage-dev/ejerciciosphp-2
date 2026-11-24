@@ -7,6 +7,9 @@ class Usuario
     private $login;
     private $password;
     private $comentario;
+
+    private $bloqueo;
+    private $saldo;
     
     // Getter con método mágico
     public function __get($atributo){

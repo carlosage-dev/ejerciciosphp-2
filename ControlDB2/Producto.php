@@ -1,10 +1,10 @@
 <?php
 
     class Producto{
-        private int $producto_no;
-        private string $descripcion;
-        private float $precio_anual;
-        private int $stock_disponible;
+        private $producto_no;
+        private  $descripcion;
+        private $precio_actual;
+        private $stock_disponible;
 
     public function __get($name){
         if (property_exists($this,$name)){

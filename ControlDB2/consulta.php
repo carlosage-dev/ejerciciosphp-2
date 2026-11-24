@@ -10,17 +10,19 @@ $ac = AccesoDatos::initModelo();
 
 $tproductos = $ac->getProductos();
 
-if (isset($_POST['tproductos[]']) && isset($_POST['orden'])){
+if (isset($_POST["tproductos"]) && isset($_POST['orden'])){
     
-    if (isset($_COOKIE['precioscambiados'])){
+    if (isset($_COOKIE["precioscambiados"])){
         $msg = "SOLO SE PUEDE HACER LA REBAJA 1 DIA";
     }else{
         setcookie("precioscambiados", date("d/m/Y"), time() + 3600 *24);
-        $tProductoActualizar = $_POST['tproductos[]'];
-        $num = $ac->rebajarPrecios($tProductoActualizar);
+        $tProductoActualizar = $_POST["tproductos"];
+        $num = $ac->actualizarPrecios($tProductoActualizar);
         $msg= "PRODUCTOS ACTUALIZADOS : ". $num;
     }
 }
+
+$tproductos = $ac->getProductos();
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +39,7 @@ if (isset($_POST['tproductos[]']) && isset($_POST['orden'])){
         </div>
         <div id="content">
             
-            <?= $msg ?? ''; ?>
+            <?= $msg ?? ' '; ?>
             <form name='entrada' method="post">
                 <table>
                     <tr>

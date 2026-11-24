@@ -22,7 +22,7 @@ class AccesoDatos {
         // Cambiar le password !!!!!
         try {
             $dsn = "mysql:host=localhost;dbname=almacendb;charset=utf8";
-            $this->dbh = new PDO($dsn, "root", "root");
+            $this->dbh = new PDO($dsn, "root", "");
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e){
             echo "Error de conexión ".$e->getMessage();
@@ -51,19 +51,17 @@ class AccesoDatos {
         return $tablaresu;
     }
 
-    public function rebajarPrecios(array $tablaProductos){
-        $cont=0;
-        $stmt = $this->dbh->prepare("update productos set precio_anual = precio_anual - precio_anual*0.10 where producto_no = :producto_no");
-        foreach ($tablaProductos as $producto_no){
-            $stmt->bindValue(":producto_no", $producto_no);
-            if ($stmt->execute()){
-                $cont++;
-            }
-        }
+    public function actualizarPrecios($lista):int{
+        $cont =0;
+        $stmt = $this->dbh->prepare("UPDATE Productos SET precio_actual=precio_actual*0.9 where producto_no = ?");
+        // Devuelvo una tabla de objetos
+        foreach ($lista as $producto_no){
+             $stmt->bindValue(1, $producto_no);
+             if ( $stmt->execute() ){
+                 $cont++;
+             }
+             }
         return $cont;
-                
-
-
     }
 
 

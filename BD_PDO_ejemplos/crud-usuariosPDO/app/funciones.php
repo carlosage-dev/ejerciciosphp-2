@@ -3,7 +3,7 @@
 // MUESTRA TODOS LOS USUARIOS
 function mostrarDatos (){
     
-    $titulos = [ "Nombre","login","Password","Comentario"];
+    $titulos = [ " ","Nombre","login","Password","Bloqueo", "Saldo","Comentario"];
     $msg = "<table>\n";
      // Identificador de la tabla
     $msg .= "<tr>";
@@ -16,9 +16,12 @@ function mostrarDatos (){
     $tuser = $db->getUsuarios();
     foreach ($tuser as $user) {
         $msg .= "<tr>";
+        $msg .= "<td><input type='checkbox' name='grupocheck'></td>";
         $msg .= "<td>$user->nombre</td>";
         $msg .= "<td>$user->login</td>";
         $msg .= "<td>$user->password</td>";
+        $msg .= "<td>$user->bloqueo</td>";
+        $msg .= "<td>$user->saldo</td>";
         $msg .= "<td>$user->comentario</td>";
         $msg .="<td><a href=\"#\" onclick=\"confirmarBorrar('$user->nombre','$user->login');\" >🗑️</a></td>\n";
         $msg .="<td><a href=\"".$auto."?orden=Modificar&id=$user->login\">✏️</a></td>\n";

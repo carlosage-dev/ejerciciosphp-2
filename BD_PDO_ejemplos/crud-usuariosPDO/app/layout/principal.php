@@ -16,6 +16,8 @@
 <form>
 <button name="orden" value="Nuevo"> ➕ Nuevo Usuario </button>
 <button name="orden" value="Terminar"> 🚪 Salir </button>
+<button name="orden" value="Incrementar-Saldo">Incrementar Saldo</button>
+<button name="orden" value="Cambiar-Bloqueos">Cambiar Bloqueos</button>
 </form>
 </div>
 </div>

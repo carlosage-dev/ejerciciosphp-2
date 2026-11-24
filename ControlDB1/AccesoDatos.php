@@ -38,6 +38,20 @@ class AccesoDatos {
         trigger_error('La clonación no permitida', E_USER_ERROR); 
     }
 
+    public  function hayCliente(String $usuario, String $clave):mixed{
+
+		$objcli = null;
+        $stmt = $this->dbh->prepare("select * from clientes where nombre = :nombre and clave = :clave");
+		$stmt->bindValue(":nombre", $usuario);
+		$stmt->bindValue(":clave", $clave);
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
+		if ( $stmt->execute() ){
+			$objcli = $stmt->fetch();
+		}
+		
+		return $objcli;
+	}
+
     public function getPedidosCliente (int $cod_cliente){
         $tablapedido=[];
         $stmt = $this->dbh->prepare("Select cod_cliente,producto,precio from pedidos where cod_cliente = :cod_cliente");
