@@ -9,20 +9,42 @@
 <div id="container">
     <div id="header">
         <!-- TODO: nombre del empleado -->
-        <h1>Bienvenido/a NOMBRE_EMPLEADO</h1>
+        <h1>Bienvenido/a <?= $emp->nombre ?></h1>
     </div>
 
     <!-- TODO: puesto, departamento (nombre + localidad) y nº de accesos -->
-    <p>Puesto: ... | Departamento: ... (...) | Accesos: ...</p>
+    <p>Puesto: <?= $emp->puesto ?> | Departamento: <?=$dep->nombre  ?> | Accesos: <?= $emp->accesos ?></p>
 
     <!-- TODO: mensaje de la cookie -->
-    <p class="msg">MENSAJE COOKIE</p>
+    <p class="msg"><?= $msgCookie ?></p>
 
     <h2>Compañeros de tu departamento</h2>
     <table>
         <tr>
             <th>Código</th><th>Nombre</th><th>Puesto</th><th>Sueldo</th><th>Antigüedad (años)</th>
         </tr>
+        <?php
+            $sumaSueldo=0;
+            $sumaAnios=0;
+            $anios = 0;
+            $contEmple=0;        
+        ?>
+
+        <?php foreach($tcompaneros as $companero): ?>
+            <?php
+                $sumaSueldo = $sumaSueldo + $companero->sueldo;
+            ?>
+            <tr>
+                <td><?= $companero->cod_emp ?></td>
+                <td><?= $companero->nombre ?></td>
+                <td><?= $companero->puesto ?></td>
+                <td><?= $companero->sueldo ?></td>
+                <td><?=$anios= antiguedad($companero->fecha_alta) ?></td>
+            </tr>
+            <?php
+            $sumaAnios = $sumaAnios + $anios;
+            $contEmple++;
+            ?>
 
         <!-- TODO: una fila por empleado con la sintaxis alternativa  foreach (...):  ...  endforeach;
                    - clase "yo" para el empleado conectado + "(tú)" junto al nombre
@@ -31,8 +53,14 @@
 
 
         <!-- TODO: fila de TOTAL (suma) y MEDIA -->
+        <?php endforeach;?>
+
+        <?php
+            $sumaAnios=floor($sumaAnios/$contEmple);
+            $sumaSueldo = $sumaSueldo/$contEmple;
+        ?>
         <tr class="total">
-            <td colspan="3">TOTAL / MEDIA</td><td>...</td><td>...</td>
+            <td colspan="3">TOTAL / MEDIA</td><td><?= $sumaSueldo ?></td><td><?= $sumaAnios ?></td>
         </tr>
     </table>
 

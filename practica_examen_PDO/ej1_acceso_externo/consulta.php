@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD']!="POST"){
 // ---------------------------------------------------------------------
 // PASO 2: Campos vacíos -> vistaerror.php y terminar
 // ---------------------------------------------------------------------
-if (empty($_POST['cod_emple'] || $_POST['clave'])){
+if (empty($_POST['cod_emp'] || $_POST['clave'])){
     $mensajeError = "CAMPOS VACIOS";
     include 'vistaerror.php';
     die();
 }
 
 if (isset($_POST['cod_emp']) && isset($_POST['clave'])){
-$empleado_param = $_POST['cod_emple'];
+$empleado_param = $_POST['cod_emp'];
 $clave_param = $_POST['clave'];
 }
 
@@ -46,6 +46,7 @@ if (! $emp){
     die();
 }else{
     $num_bloq=$emp->bloqueado;
+
 }
 
 // ---------------------------------------------------------------------
@@ -61,17 +62,38 @@ if ($num_bloq==1){
 // ---------------------------------------------------------------------
 // PASO 5: Accesos +1 (en BD y en el objeto)
 // ---------------------------------------------------------------------
-$ac->actualizarAccesoCliente($emp->cod_emp);
+$ac->incrementarAccesos($emp->cod_emp);
+
+
+
 
 // ---------------------------------------------------------------------
 // PASO 6: Cookie ultimoacceso_<cod_emp>  (leer valor viejo -> $msgCookie, luego setcookie)
 //         Recuerda: setcookie() tiene que ejecutarse ANTES de que salga cualquier HTML
 // ---------------------------------------------------------------------
+// 1. Nombre de la cookie: uno distinto para cada empleado
+$nombreCookie = "ultimoacceso_" . $emp->cod_emp;
+// seria "ultimoacceso_ana01"; esta sera la clave del array del $_COOKIE
+
+// 2. Leer el valor ANTERIOR (lo que mandó el navegador en esta petición)
+if (isset($_COOKIE[$nombreCookie])) {
+    $msgCookie = "Tu último acceso desde este navegador fue el " . $_COOKIE[$nombreCookie];
+} else {
+    $msgCookie = "Es tu primer acceso desde este navegador";
+}
+
+// 3. Guardar la fecha de AHORA (se leerá en la próxima visita). 30 días
+setcookie($nombreCookie, date("d/m/Y H:i:s"), time() + 30 * 24 * 3600);
+// seria ""ultimoacceso_ana01, es la clave del array y su valor sera la ultima vez que se conectó"
+
+
 
 
 // ---------------------------------------------------------------------
 // PASO 7: Departamento y compañeros
 // ---------------------------------------------------------------------
+$dep = $ac->getDepartamento($emp->cod_dep);
 
+$tcompaneros = $ac->getEmpleadosDepartamento($emp->cod_dep);
 
 include 'vistaempleado.php';

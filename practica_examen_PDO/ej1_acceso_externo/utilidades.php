@@ -13,5 +13,11 @@
  */
 function antiguedad(string $fecha_alta): int
 {
-    return 0;
+$fechaAlta = DateTime::createFromFormat('Y-m-d', $fecha_alta);
+
+// 2. Crea la fecha actual como objeto DateTime (en lugar de usar date())
+$fechaActual = new DateTime(); //new DateTime('today') 'today' pone la hora a 00:00:00 para una comparación exacta de días
+
+$diferencia = $fechaAlta->diff($fechaActual);
+return $diferencia->y;
 }

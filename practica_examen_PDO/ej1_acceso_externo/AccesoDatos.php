@@ -50,7 +50,7 @@ class AccesoDatos
         $emp = false;
 
         $stmt = $this->dbh->prepare("select * from empleados where cod_emp = :cod_emp and clave = :clave");
-		$stmt->bindValue(":cod_emple", $cod_emp);
+		$stmt->bindValue(":cod_emp", $cod_emp);
 		$stmt->bindValue(":clave", $clave);
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
 		if ( $stmt->execute() ){
@@ -69,7 +69,7 @@ class AccesoDatos
     public function incrementarAccesos(string $cod_emp): bool
     {
         $stmt = $this->dbh->prepare("update empleados set accesos = accesos + 1 where cod_emp = :cod_emp");
-        $stmt->bindValue(":cod_emple", $cod_emp);
+        $stmt->bindValue(":cod_emp", $cod_emp);
         $stmt->execute();
 		if ($stmt->rowCount()===1){
             return true;
@@ -83,7 +83,17 @@ class AccesoDatos
      */
     public function getDepartamento(int $cod_dep)
     {
-        return false;
+        $dep= false;
+
+        $stmt = $this->dbh->prepare("select * from departamentos where cod_dep = :cod_dep");
+		$stmt->bindValue(":cod_dep", $cod_dep);
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Departamento');
+		if ( $stmt->execute() ){
+			$dep = $stmt->fetch();
+		}
+
+
+        return $dep;
     }
 
     /**
@@ -94,7 +104,12 @@ class AccesoDatos
     public function getEmpleadosDepartamento(int $cod_dep): array
     {
         $tabla = [];
-
+        $stmt = $this->dbh->prepare("select * from empleados where cod_dep = :cod_dep order by sueldo desc");
+        $stmt->bindValue(":cod_dep", $cod_dep);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
+		if ( $stmt->execute() ){
+			$tabla = $stmt->fetchAll();
+		}
         return $tabla;
     }
 }
