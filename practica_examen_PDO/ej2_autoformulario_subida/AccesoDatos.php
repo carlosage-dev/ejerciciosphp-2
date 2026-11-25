@@ -43,7 +43,7 @@ class AccesoDatos
     public function getDepartamentos(): array
     {
         $tablaresu=[];
-        $stmt = $this->dbh->prepare("Select * from departamentos order by cod_dep, nombre");
+        $stmt = $this->dbh->prepare("Select * from departamentos order by nombre");
         $stmt->setFetchMode(PDO::FETCH_CLASS,"Departamento");
         if ($stmt->execute()){
             $tablaresu = $stmt->fetchAll();
@@ -60,30 +60,22 @@ class AccesoDatos
      * (¿Una sola consulta o dos? Tú decides. Las dos formas valen.)
      * @return array de objetos Empleado
      */
+    
     public function getEmpleados(?int $cod_dep): array
-    {   
+    {
         $tabla = [];
-        if ($cod_dep ==null){
-            $stmt = $this->dbh->prepare("select * from empleados");
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
-            if ( $stmt->execute() ){
-			$tabla = $stmt->fetchAll();
-        }   else{
-
-            $stmt = $this->dbh->prepare("select * from empleados where cod_dep = :cod_dep");
+        if ($cod_dep === null) {
+            $stmt = $this->dbh->prepare("select * from empleados order by cod_dep, nombre");
+        } else {
+            $stmt = $this->dbh->prepare("select * from empleados where cod_dep = :cod_dep order by nombre");
             $stmt->bindValue(":cod_dep", $cod_dep);
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
-		    if ( $stmt->execute() ){
-			    $tabla = $stmt->fetchAll();
-		    }
-
         }
-        
-        
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
+        if ($stmt->execute()) {
+            $tabla = $stmt->fetchAll();
+        }
+        return $tabla;
     }
-    return $tabla;
-    }
-
     /**
      * TODO 3
      * @return Empleado|false

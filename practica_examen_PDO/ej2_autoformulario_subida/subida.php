@@ -69,7 +69,11 @@ $templeados = $db->getEmpleados($depSeleccionado);
         <select name="dep">
             <option value="todos">Todos los departamentos</option>
             <?php  foreach($tdepartamentos as $departamento): ?>
-            <option value="<?=$departamento->cod_dep  ?>"><?=$departamento->nombre  ?></option>
+            <!--<option value="<$departamento->cod_dep  ?>"><$departamento->nombre  ?></option>-->
+            <option value="<?= $departamento->cod_dep ?>" <?= ($departamento->cod_dep == $depSeleccionado) ? "selected" : "" ?>>
+            <!--(condición) ? valor_si_es_verdad : valor_si_es_falso SI ES VERDADERO TOMA EL "SELECTED" SINO NADA "" -->
+                <?= $departamento->nombre ?>
+            </option>
             <!-- TODO: una option por departamento, marcando "selected" el elegido -->
              <?php endforeach; ?>
         </select>
@@ -91,7 +95,7 @@ $templeados = $db->getEmpleados($depSeleccionado);
             <!-- TODO: filas de empleados (checkbox templeados[] / disabled si bloqueado)
                        o fila "No hay empleados en este departamento" -->
                 <tr>
-                    <td><input type="checkbox" name="" id=""></td>
+                    <td><input type="checkbox" name="templeados[]" value="<?=$empleado->cod_emp ?>" <?=($empleado->bloqueado == 1) ? "disabled" : ""  ?>></td>
                     <td><?=$empleado->cod_emp ?></td>
                     <td><?= $empleado->nombre ?></td>
                     <td><?= $empleado->puesto ?></td>
