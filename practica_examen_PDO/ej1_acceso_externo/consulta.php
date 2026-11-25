@@ -17,13 +17,14 @@ $tcompaneros  = [];     // Array de Empleado
 // ---------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD']!="POST"){
     header("Refresh:0 url='acceso.html'");
+    header("Location: acceso.html");
     exit();
 }
 
 // ---------------------------------------------------------------------
 // PASO 2: Campos vacíos -> vistaerror.php y terminar
 // ---------------------------------------------------------------------
-if (empty($_POST['cod_emp'] || $_POST['clave'])){
+if (empty($_POST['cod_emp'] || empty($_POST['clave']))){
     $mensajeError = "CAMPOS VACIOS";
     include 'vistaerror.php';
     die();
@@ -63,6 +64,8 @@ if ($num_bloq==1){
 // PASO 5: Accesos +1 (en BD y en el objeto)
 // ---------------------------------------------------------------------
 $ac->incrementarAccesos($emp->cod_emp);
+//SUPERIMPORTANTE, HACES EL UPDATE EN LA BDD PERO NO LO INCREMENTAS EN EL CLIENTE
+$emp->accesos = $emp->accesos+1;
 
 
 

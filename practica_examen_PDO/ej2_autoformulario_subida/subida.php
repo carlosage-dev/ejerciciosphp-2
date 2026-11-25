@@ -33,6 +33,9 @@ function aplicarSubida(array $listaCod, float $porcentaje): int
 // 1. ¿Qué departamento se está viendo?  (GET ?dep=...  o el hidden del POST)
 //    null = todos
 $depSeleccionado = null;
+if (isset($_GET["tdepartamentos"]) && isset($_GET["Filtrar"])){
+    $depSeleccionado = $_GET['tdepartamentos'];
+}
 
 
 // 2. ¿Se ha pulsado Subir? (POST)  -> validaciones, cookie, aplicarSubida, $msg
@@ -42,6 +45,8 @@ $depSeleccionado = null;
 $tdepartamentos = [];
 $templeados     = [];
 
+$tdepartamentos = $db->getDepartamentos();
+$templeados = $db->getEmpleados($depSeleccionado);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -55,17 +60,22 @@ $templeados     = [];
     <div id="header"><h1>SUBIDA DE SUELDOS</h1></div>
 
     <!-- ================= FILTRO (GET) ================= -->
+    <?php if ($_SERVER['REQUEST_METHOD']=="GET"): ?>
     <form method="get">
         Departamento:
         <select name="dep">
             <option value="todos">Todos los departamentos</option>
+            <?php  foreach($tdepartamentos as $departamento): ?>
+            <option value="<?=$departamento->cod_dep  ?>" name="tdepartamentos[]"><?=$departamento->nombre  ?></option>
             <!-- TODO: una option por departamento, marcando "selected" el elegido -->
+             <?php endforeach; ?>
         </select>
         <input type="submit" value="Filtrar">
     </form>
-
+    
+    
     <!-- TODO: mostrar $msg solo si hay algo -->
-
+    
     <!-- ================= SUBIDA (POST) ================= -->
     <form method="post">
         <!-- TODO: input hidden para no perder el departamento al hacer POST -->
@@ -74,8 +84,17 @@ $templeados     = [];
             <tr>
                 <th></th><th>Código</th><th>Nombre</th><th>Puesto</th><th>Departamento</th><th>Sueldo</th>
             </tr>
+            <?php foreach($templeados as $empleado): ?>
             <!-- TODO: filas de empleados (checkbox templeados[] / disabled si bloqueado)
                        o fila "No hay empleados en este departamento" -->
+                <tr>
+                    <td><?=$empleado->cod_emp ?></td>
+                    <td><?= $empleado->nombre ?></td>
+                    <td><?= $empleado->puesto ?></td>
+                    <td><?= $empleado->cod_dep ?></td>
+                    <td><?= $empleado-> ?></td>
+                </tr>
+            <?php endforeach; ?>           
         </table>
 
         Porcentaje de subida: <input type="number" name="porcentaje"> %
@@ -83,6 +102,8 @@ $templeados     = [];
 
         <button name="orden" value="Subir">Subir sueldo a los marcados</button>
     </form>
+
+    <?php endif; ?>
 </div>
 </body>
 </html>

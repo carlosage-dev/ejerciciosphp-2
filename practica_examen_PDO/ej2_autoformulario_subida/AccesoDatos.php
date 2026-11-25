@@ -42,7 +42,15 @@ class AccesoDatos
      */
     public function getDepartamentos(): array
     {
-        return [];
+        $tablaresu=[];
+        $stmt = $this->dbh->prepare("Select * from departamentos");
+        $stmt->setFetchMode(PDO::FETCH_CLASS,"Departamento");
+        if ($stmt->execute()){
+            $tablaresu = $stmt->fetchAll();
+        }
+
+
+        return $tablaresu;
     }
 
     /**
@@ -52,9 +60,16 @@ class AccesoDatos
      * (¿Una sola consulta o dos? Tú decides. Las dos formas valen.)
      * @return array de objetos Empleado
      */
-    public function getEmpleados(?int $cod_dep): array
+    public function getEmpleados(int $cod_dep): array
     {
-        return [];
+        $tabla = [];
+        $stmt = $this->dbh->prepare("select * from empleados where cod_dep = :cod_dep");
+        $stmt->bindValue(":cod_dep", $cod_dep);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
+		if ( $stmt->execute() ){
+			$tabla = $stmt->fetchAll();
+		}
+        return $tabla;
     }
 
     /**
@@ -63,7 +78,14 @@ class AccesoDatos
      */
     public function getEmpleado(string $cod_emp)
     {
-        return false;
+        $emp= null;
+        $stmt = $this->dbh->prepare("select * from empleados where cod_emp = :cod_emp");
+        $stmt->bindValue(":cod_emp",$cod_emp);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
+        if ( $stmt->execute() ){
+			$emp = $stmt->fetch();
+		}
+        return $emp;
     }
 
     /**
@@ -73,6 +95,16 @@ class AccesoDatos
      */
     public function actualizarSueldo(string $cod_emp, float $nuevoSueldo): bool
     {
-        return false;
+        $actualizado = false;
+        $stmt = $this->dbh->prepare("update empleados set sueldo = :nuevoSueldo where cod_emp = :cod_emp");
+        $stmt->bindValue(":nuevoSueldo",$nuevoSueldo);
+        $stmt->bindValue(":cod_emp",$cod_emp);
+        $stmt->execute();
+        if ($stmt->rowCount()===1){
+            $actualizado= true;
+        }
+
+        return $actualizado;
+
     }
 }

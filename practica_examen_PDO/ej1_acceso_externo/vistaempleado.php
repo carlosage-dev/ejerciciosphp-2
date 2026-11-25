@@ -13,7 +13,7 @@
     </div>
 
     <!-- TODO: puesto, departamento (nombre + localidad) y nº de accesos -->
-    <p>Puesto: <?= $emp->puesto ?> | Departamento: <?=$dep->nombre  ?> | Accesos: <?= $emp->accesos ?></p>
+    <p>Puesto: <?= $emp->puesto ?> | Departamento: <?=$dep->nombre  ?> (<?= $dep->localidad ?>) | Accesos: <?= $emp->accesos ?></p>
 
     <!-- TODO: mensaje de la cookie -->
     <p class="msg"><?= $msgCookie ?></p>
