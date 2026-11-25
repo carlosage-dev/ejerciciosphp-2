@@ -33,8 +33,12 @@ function aplicarSubida(array $listaCod, float $porcentaje): int
 // 1. ¿Qué departamento se está viendo?  (GET ?dep=...  o el hidden del POST)
 //    null = todos
 $depSeleccionado = null;
-if (isset($_GET["tdepartamentos"]) && isset($_GET["Filtrar"])){
-    $depSeleccionado = $_GET['tdepartamentos'];
+if (isset($_GET["dep"])){
+    if ($_GET["dep"]!="todos"){
+        $depSeleccionado = (int) $_GET["dep"];
+    }else{
+        $depSeleccionado=null;
+    }
 }
 
 
@@ -60,13 +64,12 @@ $templeados = $db->getEmpleados($depSeleccionado);
     <div id="header"><h1>SUBIDA DE SUELDOS</h1></div>
 
     <!-- ================= FILTRO (GET) ================= -->
-    <?php if ($_SERVER['REQUEST_METHOD']=="GET"): ?>
     <form method="get">
         Departamento:
         <select name="dep">
             <option value="todos">Todos los departamentos</option>
             <?php  foreach($tdepartamentos as $departamento): ?>
-            <option value="<?=$departamento->cod_dep  ?>" name="tdepartamentos[]"><?=$departamento->nombre  ?></option>
+            <option value="<?=$departamento->cod_dep  ?>"><?=$departamento->nombre  ?></option>
             <!-- TODO: una option por departamento, marcando "selected" el elegido -->
              <?php endforeach; ?>
         </select>
@@ -88,11 +91,12 @@ $templeados = $db->getEmpleados($depSeleccionado);
             <!-- TODO: filas de empleados (checkbox templeados[] / disabled si bloqueado)
                        o fila "No hay empleados en este departamento" -->
                 <tr>
+                    <td><input type="checkbox" name="" id=""></td>
                     <td><?=$empleado->cod_emp ?></td>
                     <td><?= $empleado->nombre ?></td>
                     <td><?= $empleado->puesto ?></td>
                     <td><?= $empleado->cod_dep ?></td>
-                    <td><?= $empleado-> ?></td>
+                    <td><?= $empleado->sueldo ?></td>
                 </tr>
             <?php endforeach; ?>           
         </table>
@@ -103,7 +107,6 @@ $templeados = $db->getEmpleados($depSeleccionado);
         <button name="orden" value="Subir">Subir sueldo a los marcados</button>
     </form>
 
-    <?php endif; ?>
 </div>
 </body>
 </html>
