@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal del empleado</title>
+    <link href="default.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="container" style="max-width: 420px;">
+    <div id="header"><h1>PORTAL DEL EMPLEADO</h1></div>
+    <!-- POST: viaja una contraseña, no queremos que salga en la URL -->
+    <form action="consulta.php" method="post">
+        Código de empleado: <br><input type="text" name="cod_emp"><br>
+        Clave: <br><input type="password" name="clave"><br><br>
+        <input type="submit" name="orden" value="Entrar">
+    </form>
+</div>
+</body>
+</html>

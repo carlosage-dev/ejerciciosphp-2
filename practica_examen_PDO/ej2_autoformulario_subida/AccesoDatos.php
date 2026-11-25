@@ -33,34 +33,27 @@ class AccesoDatos
     }
 
     // =====================================================================
-    //  MÉTODOS A DESARROLLAR
+    //  MÉTODOS
     // =====================================================================
 
     /**
-     * TODO 1
      * @return array de objetos Departamento ordenados por nombre
      */
     public function getDepartamentos(): array
     {
-        $tablaresu=[];
-        $stmt = $this->dbh->prepare("Select * from departamentos order by nombre");
-        $stmt->setFetchMode(PDO::FETCH_CLASS,"Departamento");
-        if ($stmt->execute()){
-            $tablaresu = $stmt->fetchAll();
+        $tabla = [];
+        $stmt = $this->dbh->prepare("select * from departamentos order by nombre");
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Departamento');
+        if ($stmt->execute()) {
+            $tabla = $stmt->fetchAll();
         }
-
-
-        return $tablaresu;
+        return $tabla;
     }
 
     /**
-     * TODO 2
      * Si $cod_dep es null devuelve TODOS los empleados; si no, solo los de ese departamento.
-     * Ordenados por cod_dep y luego por nombre.
-     * (¿Una sola consulta o dos? Tú decides. Las dos formas valen.)
      * @return array de objetos Empleado
      */
-    
     public function getEmpleados(?int $cod_dep): array
     {
         $tabla = [];
@@ -76,24 +69,23 @@ class AccesoDatos
         }
         return $tabla;
     }
+
     /**
-     * TODO 3
      * @return Empleado|false
      */
     public function getEmpleado(string $cod_emp)
     {
-        $emp= null;
+        $emp = false;
         $stmt = $this->dbh->prepare("select * from empleados where cod_emp = :cod_emp");
-        $stmt->bindValue(":cod_emp",$cod_emp);
+        $stmt->bindValue(":cod_emp", $cod_emp);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Empleado');
-        if ( $stmt->execute() ){
-			$emp = $stmt->fetch();
-		}
+        if ($stmt->execute()) {
+            $emp = $stmt->fetch();   // fetch() devuelve false si no hay fila
+        }
         return $emp;
     }
 
     /**
-     * TODO 4
      * Pone al empleado el sueldo que se le pasa (el cálculo NO se hace aquí).
      * @return bool true si se ha modificado la fila
      */
@@ -101,14 +93,12 @@ class AccesoDatos
     {
         $actualizado = false;
         $stmt = $this->dbh->prepare("update empleados set sueldo = :nuevoSueldo where cod_emp = :cod_emp");
-        $stmt->bindValue(":nuevoSueldo",$nuevoSueldo);
-        $stmt->bindValue(":cod_emp",$cod_emp);
+        $stmt->bindValue(":nuevoSueldo", $nuevoSueldo);
+        $stmt->bindValue(":cod_emp", $cod_emp);
         $stmt->execute();
-        if ($stmt->rowCount()===1){
-            $actualizado= true;
+        if ($stmt->rowCount() === 1) {
+            $actualizado = true;
         }
-
         return $actualizado;
-
     }
 }
